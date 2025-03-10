@@ -37,7 +37,8 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|unique:users',
             'password' => 'required|string',
-            'password_confirmation' => 'required|same:password'
+            'password_confirmation' => 'required|same:password',
+            'roles' => 'required'
         ]);
 
         try {
@@ -45,6 +46,7 @@ class UserController extends Controller
                 'name'  => $request->name,
                 'email' => $request->email,
                 'password' =>  Hash::make($request->password),
+                'roles' => $request->roles,
             ]);
 
             $user->save();
@@ -79,7 +81,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email,'.$id,
-            // 'password' => 'required|string',
+            'roles' => 'required',
             'password_confirmation' => 'nullable|same:password'
         ]);
 
@@ -88,6 +90,7 @@ class UserController extends Controller
             // dd($user->first());
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->roles = $request->roles;
             if ($request->password){
                 $user->password = Hash::make($request->password);
             }
