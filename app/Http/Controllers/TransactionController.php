@@ -23,7 +23,8 @@ class TransactionController extends Controller
      */
     public function create()
     {
-
+        $menus = Menu::all();
+        return view('transactions.create', compact('menus'));
     }
 
     /**
@@ -31,15 +32,35 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-
-    }
+        $request->validate([
+            'menu_id' => 'required|exists:menus,id',
+            'quantity' => 'required|integer|min:1',
+            'payment_method' => 'required|string',
+    ]);
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $request->validate([
+            'menu_id' => 'required|exists:menus,id',
+            'quantity' => 'required|integer|min:1',
+            'payment_method' => 'required|string',
+        ]);
+
+        $menu = Menu::findOrFail($request->menu_id);
+        $total_price = $menu->price * $request->quantity;
+
+        Transaction::create([
+            'user_id' => Auth::id(),
+            'menu_id' => $request->menu_id,
+            'quantity' => $request->quantity,
+            'total_price' => $total_price,
+            'payment_method' => $request->payment_method,
+        ]);
+
+        return redirect()->route('transactions.index')->with('success', 'Transaction added successfully!');
     }
 
     /**
@@ -47,7 +68,8 @@ class TransactionController extends Controller
      */
     public function edit()
     {
-
+        $menus = Menu::all();
+        return view('transactions.edit', compact('transaction', 'menus'));
     }
 
     /**
@@ -55,7 +77,23 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'menu_id' => 'required|exists:menus,id',
+            'quantity' => 'required|integer|min:1',
+            'payment_method' => 'required|string',
+        ]);
+
+        $menu = Menu::findOrFail($request->menu_id);
+        $total_price = $menu->price * $request->quantity;
+
+        $transaction->update([
+            'menu_id' => $request->menu_id,
+            'quantity' => $request->quantity,
+            'total_price' => $total_price,
+            'payment_method' => $request->payment_method,
+        ]);
+
+        return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully!');
     }
 
     /**
@@ -63,8 +101,7 @@ class TransactionController extends Controller
      */
     public function destroy( )
     {
-       //
+        $transaction->delete();
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully!');
     }
-
-
 }
