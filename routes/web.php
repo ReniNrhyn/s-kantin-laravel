@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -25,13 +26,19 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
 
     // Menu Management
-    Route::resource('menus', MenuController::class);
+    // Route::resource('menus', MenuController::class);
+    Route::resource('menus', MenuController::class)->middleware(['auth']);
 
     // Transaction Management
     Route::resource('transactions', TransactionController::class);
 
-    // Cetak Struk
-    Route::get('/transactions/{transaction}/print', [TransactionController::class, 'print'])->name('transactions.print');
+    Route::resource('categories', CategoryController::class);
+
+    // // Cetak Struk
+    // Route::get('/transactions/{transaction}/print', [TransactionController::class, 'print'])->name('transactions.print');
+
+    // Route::resource('categories', CategoryController::class)->middleware('auth');
+
 });
 
 // Include authentication routes

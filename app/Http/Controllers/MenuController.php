@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(Request $request) // Tambahkan parameter Request
     {
-        $menus = Menu::all();
+        $search = $request->input('search');
+
+        $menus = Menu::when($search, function ($query) use ($search) {
+                return $query->where('name', 'like', '%'.$search.'%')
+                            ->orWhere('description', 'like', '%'.$search.'%');
+            })
+            ->latest()
+            ->paginate(10);
+
         return view('menus.index', compact('menus'));
     }
 
