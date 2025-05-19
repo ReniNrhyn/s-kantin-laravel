@@ -20,6 +20,10 @@
                                 class="relative inline-flex items-center px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300">
                                 Add New
                             </a>
+                            <a href="{{ route('users.export') }}"
+                            class="relative inline-flex items-center px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300">
+                            Export Excel
+                        </a>
                         </div>
                     </div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -35,6 +39,9 @@
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
                                         <span>Email</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Roles</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
                                         <span>Action</span>
@@ -56,6 +63,9 @@
                                             {{ $user->email }}
                                         </td>
                                         <td class="px-6 py-2 text-center">
+                                            {{ ucfirst($user->roles) }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
                                             <form onsubmit="return confirm('Apakah Anda Yakin ?');"
                                                 action="{{ route('users.destroy', $user->id) }}" method="POST">
                                                 <a href="{{ route('users.edit', $user->id) }}"
@@ -72,6 +82,11 @@
                                     <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
                                         Data Belum Tersedia!
                                     </div>
+                                    {{-- <tr>
+                                        <td colspan="5" class="text-center p-5">
+                                            Data Belum Tersedia!
+                                        </td>
+                                    </tr> --}}
                                 @endforelse
                             </tbody>
                         </table>

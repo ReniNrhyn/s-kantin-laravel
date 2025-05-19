@@ -1,107 +1,107 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Manajemen Transaksi') }}
+            {{ __('Transaction Management') }}
         </h2>
     </x-slot>
-
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="flex space-x-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-sm">
+                <div class="mx-auto py-4 px-4 sm:px-6 lg:px-8 text-gray-900 dark:text-gray-100">
+                    <div class="flex items-center justify-between py-5 mb-5">
+                        <div class="md:mt-0 sm:flex-none w-72">
                             <form action="{{ route('transactions.index') }}" method="GET">
-                                <input type="date" name="date" value="{{ request('date') }}"
-                                    class="rounded-md border-gray-300 shadow-sm">
-                                <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md">
-                                    Filter
-                                </button>
-                            </form>
-
-                            <form action="{{ route('transactions.index') }}" method="GET">
-                                <input type="text" name="search" placeholder="Cari invoice..."
-                                    value="{{ request('search') }}"
-                                    class="rounded-md border-gray-300 shadow-sm">
+                                <input type="text" name="search" placeholder="Type for search then enter"
+                                    class="w-full relative inline-flex items-center px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300" />
                             </form>
                         </div>
-
-                        <a href="{{ route('transactions.create') }}"
-                           class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                            + Transaksi Baru
-                        </a>
+                        <div class="sm:ml-16 sm:mt-0 sm:flex-none">
+                            <a type="button" href="{{ route('transactions.create') }}"
+                                class="relative inline-flex items-center px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:focus:border-blue-700 dark:active:bg-gray-700 dark:active:text-gray-300">
+                                Add New Transaction
+                            </a>
+                        </div>
                     </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Invoice</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tanggal</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Menu</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jumlah</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pembayaran</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead class="text-sm text-gray-700 uppercase bg-white dark:bg-gray-800 ">
+                                <tr
+                                    class="bg-white border-t border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>NO</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Cashier</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Menu</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Quantity</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Total Price</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Payment Method</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Date</span>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-center">
+                                        <span>Action</span>
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200">
-                                @forelse ($transactions as $transaction)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->invoice_number }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->formatted_date }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->menu->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->quantity }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->formatted_total }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full
-                                            {{ $transaction->payment_method == 'cash' ? 'bg-green-100 text-green-800' :
-                                               ($transaction->payment_method == 'e-wallet' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800') }}">
-                                            {{ $transaction->payment_method }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs rounded-full
-                                            {{ $transaction->status == 'completed' ? 'bg-green-100 text-green-800' :
-                                               ($transaction->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
-                                            {{ $transaction->status }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex space-x-2">
-                                            <a href="{{ route('transactions.show', $transaction) }}"
-                                               class="text-blue-600 hover:text-blue-900">
-                                                Detail
-                                            </a>
-                                            <a href="{{ route('transactions.edit', $transaction) }}"
-                                               class="text-yellow-600 hover:text-yellow-900">
-                                                Edit
-                                            </a>
-                                            <form action="{{ route('transactions.destroy', $transaction) }}" method="POST">
+                            <tbody>
+                                @forelse($transactions as $transaction)
+                                    <tr
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <td scope="row"
+                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                                            {{ ++$i }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            {{ $transaction->user->name }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            {{ $transaction->menu->name }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            {{ $transaction->quantity }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            {{ number_format($transaction->total_price, 2) }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            {{ ucfirst($transaction->payment_method) }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            {{ $transaction->created_at->format('d M Y H:i') }}
+                                        </td>
+                                        <td class="px-6 py-2 text-center">
+                                            <form onsubmit="return confirm('Are you sure?');"
+                                                action="{{ route('transactions.destroy', $transaction->id) }}" method="POST">
+                                                <a href="{{ route('transactions.edit', $transaction->id) }}"
+                                                    class="focus:outline-none text-gray-50 bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">EDIT</a>
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900"
-                                                    onclick="return confirm('Hapus transaksi ini?')">
-                                                    Hapus
-                                                </button>
+                                                <button type="submit"
+                                                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                    DELETE</button>
                                             </form>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="9" class="px-6 py-4 text-center">Tidak ada data transaksi</td>
-                                </tr>
+                                    <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
+                                        No transactions available!
+                                    </div>
                                 @endforelse
                             </tbody>
                         </table>
-                    </div>
-
-                    <div class="mt-4">
-                        {{ $transactions->links() }}
+                        <div class="relative p-3">
+                            {{ $transactions->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

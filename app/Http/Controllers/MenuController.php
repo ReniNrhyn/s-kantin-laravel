@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class MenuController extends Controller
 {
@@ -64,5 +66,12 @@ class MenuController extends Controller
         $menu->delete();
 
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully!');
+    }
+
+    public function reportPdf()
+    {
+        $data = Menu::all();
+        $pdf = Pdf::loadView('menus.report-pdf', ['data' => $data]);
+        return $pdf->stream('menu-report.pdf');
     }
 }

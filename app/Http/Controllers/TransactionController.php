@@ -2,113 +2,87 @@
 
 namespace App\Http\Controllers;
 
-// use App\Models\Transaction;
-// use Illuminate\Http\Request;
 use App\Models\Transaction;
-use App\Models\Menu;
 use App\Models\User;
+use App\Models\Menu;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $transactions = Transaction::when(request()->search, function ($query) {
-    //         return $query->where('invoice_number', 'like', '%' . request()->search . '%');
-    //     })->paginate(10);
-
-    //     return view('transactions.index', compact('transactions'))
-    //         ->with('i', (request()->input('page', 1) - 1) * 10);
-    // }
     public function index(Request $request)
     {
-        $query = Transaction::query()
-            ->with(['user', 'menu'])
-            ->latest();
+        $search = $request->input('search');
 
-        // Filter berdasarkan tanggal
-        if ($request->date) {
-            $query->whereDate('created_at', $request->date);
-        }
-
-        // Filter berdasarkan invoice number
-        if ($request->search) {
-            $query->where('invoice_number', 'like', '%'.$request->search.'%');
-        }
-
-        $transactions = $query->paginate(10);
+        $transactions = Transaction::with(['user', 'menu'])
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('menu', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere('payment_method', 'like', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('transactions.index', compact('transactions'));
     }
+
     /**
      * Show the form for creating a new resource.
      */
-    // public function create()
-    // {
-    //     return view('transactions.create');
-    // }
     public function create()
     {
+        $users = User::all();
         $menus = Menu::all();
-        $cashiers = User::where('role', 'cashier')->get();
-        return view('transactions.create', compact('menus', 'cashiers'));
+        return view('transactions.create', compact('users', 'menus'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'user_id' => 'required|exists:users,id',
-    //         'menu_id' => 'required|exists:menus,id',
-    //         'invoice_number' => 'required|string|unique:transactions',
-    //         'quantity' => 'required|integer|min:1',
-    //         'total_price' => 'required|numeric|min:0',
-    //         'payment_method' => 'required|string',
-    //         'transaction_date' => 'required|date',
-    //         'status' => 'required|in:completed,pending,canceled'
-    //     ]);
-
-    //     try {
-    //         $transaction = Transaction::create($request->all());
-    //         return redirect()->route('transactions.index')
-    //             ->with('success', 'Transaction #' . $transaction->invoice_number . ' has been added successfully!');
-    //     } catch (\Throwable $th) {
-    //         return back()->with('error', $th->getMessage());
-    //     }
-    // }
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'user_id' => 'required|exists:users,id',
             'menu_id' => 'required|exists:menus,id',
             'quantity' => 'required|integer|min:1',
-            'total_price' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,e-wallet,bank_transfer',
+            'payment_method' => 'required|in:cash,e-wallet,credit_card,debit_card',
         ]);
 
-        // Generate invoice number
-        $validated['invoice_number'] = 'INV-'.date('Ymd').'-'.str_pad(Transaction::count() + 1, 4, '0', STR_PAD_LEFT);
-        $validated['status'] = 'completed';
+        try {
+            DB::beginTransaction();
 
-        Transaction::create($validated);
+            $menu = Menu::findOrFail($request->menu_id);
+            $totalPrice = $menu->price * $request->quantity;
 
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaksi berhasil dicatat!');
+            $transaction = Transaction::create([
+                'user_id' => $request->user_id,
+                'menu_id' => $request->menu_id,
+                'quantity' => $request->quantity,
+                'total_price' => $totalPrice,
+                'payment_method' => $request->payment_method,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('transactions.index')
+                ->with('success', 'Transaction created successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to create transaction: ' . $e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    // public function show(string $id)
-    // {
-    //     return view('transactions.show', compact('transaction'));
-    // }
     public function show(Transaction $transaction)
     {
         return view('transactions.show', compact('transaction'));
@@ -119,10 +93,9 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        // return view('transactions.edit', compact('transaction'));
+        $users = User::all();
         $menus = Menu::all();
-        $cashiers = User::where('role', 'cashier')->get();
-        return view('transactions.edit', compact('transaction', 'menus', 'cashiers'));
+        return view('transactions.edit', compact('transaction', 'users', 'menus'));
     }
 
     /**
@@ -130,59 +103,49 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        // $request->validate([
-        //     'user_id' => 'required|exists:users,id',
-        //     'menu_id' => 'required|exists:menus,id',
-        //     'invoice_number' => 'required|string|unique:transactions,invoice_number,' . $transaction->id,
-        //     'quantity' => 'required|integer|min:1',
-        //     'total_price' => 'required|numeric|min:0',
-        //     'payment_method' => 'required|string',
-        //     'transaction_date' => 'required|date',
-        //     'status' => 'required|in:completed,pending,canceled'
-        // ]);
-
-        // try {
-        //     $transaction->update($request->all());
-        //     return redirect()->route('transactions.index')
-        //         ->with('success', 'Transaction #' . $transaction->invoice_number . ' has been updated successfully!');
-        // } catch (\Throwable $th) {
-        //     return back()->with('error', $th->getMessage());
-        // }
-        $validated = $request->validate([
+        $request->validate([
             'user_id' => 'required|exists:users,id',
             'menu_id' => 'required|exists:menus,id',
             'quantity' => 'required|integer|min:1',
-            'total_price' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,e-wallet,bank_transfer',
-            'status' => 'required|in:completed,pending,canceled',
+            'payment_method' => 'required|in:cash,e-wallet,credit_card,debit_card',
         ]);
 
-        $transaction->update($validated);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaksi berhasil diperbarui!');
+            $menu = Menu::findOrFail($request->menu_id);
+            $totalPrice = $menu->price * $request->quantity;
+
+            $transaction->update([
+                'user_id' => $request->user_id,
+                'menu_id' => $request->menu_id,
+                'quantity' => $request->quantity,
+                'total_price' => $totalPrice,
+                'payment_method' => $request->payment_method,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('transactions.index')
+                ->with('success', 'Transaction updated successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to update transaction: ' . $e->getMessage());
+        }
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Transaction $transaction)
     {
-        // try {
-        //     $transaction->delete();
-        //     return redirect()->route('transactions.index')
-        //         ->with('success', 'Transaction #' . $transaction->invoice_number . ' has been deleted successfully!');
-        // } catch (\Throwable $th) {
-        //     return back()->with('error', $th->getMessage());
-        // }
-        $transaction->delete();
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaksi berhasil dihapus!');
-    }
-
-    public function print(Transaction $transaction)
-    {
-        return view('transactions.print', compact('transaction'));
+        try {
+            $transaction->delete();
+            return redirect()->route('transactions.index')
+                ->with('success', 'Transaction deleted successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to delete transaction: ' . $e->getMessage());
+        }
     }
 }

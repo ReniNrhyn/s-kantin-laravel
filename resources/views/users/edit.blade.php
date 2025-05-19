@@ -49,13 +49,13 @@
 
                         <!-- Role Selection -->
                         <div class="mt-4">
-                            <x-input-label for="roles" :value="__('Role')" />
+                            <x-input-label for="roles" :value="__('Roles')" />
                             <select id="roles" name="roles" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50">
                                 <option value="admin" {{ $user->roles == 'admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="user" {{ $user->roles == 'user' ? 'selected' : '' }}>User</option>
                                 <option value="kasir" {{ $user->roles == 'kasir' ? 'selected' : '' }}>Kasir</option>
                             </select>
-                            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('roles')" class="mt-2" />
                         </div>
 
                         <div class="flex items-center justify-end mt-4">

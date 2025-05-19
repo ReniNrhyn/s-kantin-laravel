@@ -12,15 +12,19 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'menu_id',
-        'invoice_number',
+        // 'invoice_number',
         'quantity',
         'total_price',
         'payment_method',
-        'status',
+        // 'status',
     ];
 
     protected $casts = [
         'total_price' => 'decimal:2',
+    ];
+
+    protected $attributes = [
+        'payment_method' => 'cash',
     ];
 
     public function user()
@@ -33,15 +37,15 @@ class Transaction extends Model
         return $this->belongsTo(Menu::class);
     }
 
-    // Format tanggal transaksi
-    public function getFormattedDateAttribute()
-    {
-        return $this->created_at->format('d M Y, H:i');
-    }
+    // // Format tanggal transaksi
+    // public function getFormattedDateAttribute()
+    // {
+    //     return $this->created_at->format('d M Y, H:i');
+    // }
 
-    // Format total harga
-    public function getFormattedTotalAttribute()
-    {
-        return 'Rp '.number_format($this->total_price, 0, ',', '.');
-    }
+    // // Format total harga
+    // public function getFormattedTotalAttribute()
+    // {
+    //     return 'Rp '.number_format($this->total_price, 0, ',', '.');
+    // }
 }

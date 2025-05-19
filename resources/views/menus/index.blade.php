@@ -59,6 +59,10 @@
                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
                             Add New Menu
                         </a>
+                        <a href="{{ route('menus.report-pdf') }}"
+                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+                            Download PDF
+                        </a>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -111,9 +115,12 @@
                                     </td>
                                 </tr>
                                 @empty
-                                <tr>
+                                    <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
+                                        Data Belum Tersedia!
+                                    </div>
+                                {{-- <tr>
                                     <td colspan="6" class="px-6 py-4 text-center">No menus found</td>
-                                </tr>
+                                </tr> --}}
                                 @endforelse
                             </tbody>
                         </table>

@@ -23,10 +23,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // User Management
+    Route::get('users/export', [UserController::class, 'exportExcel'])->name('users.export');
     Route::resource('users', UserController::class);
+
 
     // Menu Management
     // Route::resource('menus', MenuController::class);
+    Route::get('/menus/report-pdf', [MenuController::class, 'reportPdf'])
+    ->name('menus.report-pdf')
+    ->middleware(['auth']);
     Route::resource('menus', MenuController::class)->middleware(['auth']);
 
     // Transaction Management
