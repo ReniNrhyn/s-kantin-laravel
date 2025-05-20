@@ -54,6 +54,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                 @php $i = 0; @endphp
                                 @forelse($transactions as $transaction)
                                     <tr
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -93,9 +94,11 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
-                                        No transactions available!
-                                    </div>
+                                    <tr>
+                                        <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
+                                            No transactions available!
+                                        </div>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>

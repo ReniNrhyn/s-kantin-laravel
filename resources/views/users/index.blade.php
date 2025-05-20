@@ -78,6 +78,7 @@
                                             </form>
                                         </td>
                                     </tr>
+
                                 @empty
                                     <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
                                         Data Belum Tersedia!

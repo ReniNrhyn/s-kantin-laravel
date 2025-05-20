@@ -55,14 +55,18 @@
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </form>
                         </div>
-                        <a href="{{ route('menus.create') }}"
-                           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                            Add New Menu
-                        </a>
-                        <a href="{{ route('menus.report-pdf') }}"
-                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
-                            Download PDF
-                        </a>
+                        <!-- Add New Menu -->
+                        <div class="flex justify-end space-x-2 mb-4">
+                            <a href="{{ route('menus.create') }}"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                                Add New Menu
+                            </a>
+                            <!-- Download PDF -->
+                            <a href="{{ route('menus.report-pdf') }}"
+                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+                                Download PDF
+                            </a>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto">
