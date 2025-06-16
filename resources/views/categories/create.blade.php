@@ -1,21 +1,3 @@
-{{-- @extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h1 class="my-4">Add New Category</h1>
-
-    <form action="{{ route('categories.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="name" class="form-label">Category Name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ route('categories.index') }}" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
-@endsection --}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -29,11 +11,21 @@
                     <form method="POST" action="{{ route('categories.store') }}">
                         @csrf
 
-                        <!-- Name -->
+                        <!-- Category Name -->
                         <div>
-                            <x-input-label for="name" :value="__('Category Name')" />
-                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                            <x-input-label for="category_name" :value="__('Category Name')" />
+                            <x-text-input id="category_name" class="block mt-1 w-full" type="text"
+                                name="category_name" :value="old('category_name')" required autofocus />
+                            <x-input-error :messages="$errors->get('category_name')" class="mt-2" />
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mt-4">
+                            <x-input-label for="description" :value="__('Description (Optional)')" />
+                            <textarea id="description" name="description" rows="3"
+                                class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                >{{ old('description') }}</textarea>
+                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
                         <div class="flex items-center justify-end mt-4">

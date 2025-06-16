@@ -2,30 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stock extends Model
 {
+    use HasFactory;
+
+    protected $primaryKey = 'stock_id';
+
     protected $fillable = [
-        'name', 'type', 'quantity', 'unit',
-        'min_stock', 'price_per_unit', 'supplier_id', 'notes'
+        'stock_id',
+        'quantity',
+        'operation',
+        'operation_date',
+        'notes'
     ];
 
-    public function histories(): HasMany
-    {
-        return $this->hasMany(StockHistory::class);
-    }
+    protected $casts = [
+        'operation_date' => 'datetime',
+        'quantity' => 'decimal:2'
+    ];
 
-    public function supplier(): BelongsTo
+    /**
+     * Get the ingredient associated with the stock record.
+     */
+    public function ingredient()
     {
-        return $this->belongsTo(Supplier::class);
-    }
-
-    // Cek stok hampir habis
-    public function getIsLowAttribute(): bool
-    {
-        return $this->quantity <= $this->min_stock;
+        return $this->belongsTo(Stock::class, 'stock_id', 'stock_id');
     }
 }

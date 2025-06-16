@@ -1,44 +1,3 @@
-{{-- @extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <h1 class="my-4">Category Management</h1>
-    <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Add New Category</a>
-
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($categories as $category)
-            <tr>
-                <td>{{ $category->id }}</td>
-                <td>{{ $category->name }}</td>
-                <td>
-                    <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this category?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{ $categories->links() }}
-</div>
-@endsection --}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -75,7 +34,7 @@
                                         <span>Category Name</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
-                                        <span>Created At</span>
+                                        <span>Description</span>
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-center">
                                         <span>Action</span>
@@ -91,10 +50,10 @@
                                             {{ ++$i }}
                                         </td>
                                         <td class="px-6 py-2 text-center">
-                                            {{ $category->name }}
+                                            {{ $category->category_name }}
                                         </td>
                                         <td class="px-6 py-2 text-center">
-                                            {{ $category->created_at->format('d M Y') }}
+                                            {{ $category->description ?? '-' }}
                                         </td>
                                         <td class="px-6 py-2 text-center">
                                             <form onsubmit="return confirm('Are you sure?');"
@@ -109,9 +68,9 @@
                                             </form>
                                         </td>
                                     </tr>
-                                @empty
+                                @empty //  jika kosong
                                     <tr>
-                                        <td colspan="4" class="px-6 py-4 text-center">
+                                        <td colspan="5" class="px-6 py-4 text-center">
                                             <div class="bg-gray-500 text-white p-3 rounded shadow-sm mb-3">
                                                 No Categories Available!
                                             </div>

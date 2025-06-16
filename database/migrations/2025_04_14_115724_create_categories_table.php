@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id(); // ID kategori menu
+            $table->string('category_name'); // Food, Drinks, Snacks
+            $table->text('description')->nullable(); // Keterangan tambahan
             $table->timestamps();
         });
     }
